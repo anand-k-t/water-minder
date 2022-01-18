@@ -95,13 +95,9 @@ let keepCurrentNotif = true;
 // you can create arbitrary fractions with superscript digits \u2070, \u00b9, \u00b2, \u00b3, \u2074 - \u2079 and fraction slash \u2044 and subscript digits \u2080 - \u2089 e.g. 5/8 is \u2075\u2044\u2088
 // these choices will be sorted in ascending order of their value
 let presets = {
-  "\u215b": 1 / 8,
-  "\u00bc": 1 / 4,
-  "\u2153": 1 / 3,
-  "\u00bd": 1 / 2,
-  "\u2154": 2 / 3,
-  "\u00be": 3 / 4,
-  "1": 1,
+	"100": 1/10,
+  "200":1/5,
+	"250": 1/4	
 };
 
 // advanced options
