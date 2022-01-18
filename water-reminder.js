@@ -70,7 +70,7 @@ let startOfDay = 6.00;
 // until when you want to get notifications
 let endOfDay = 22.30;
 // in minutes; how often you want to get notified
-let interval = 300;
+let interval = 30;
 // in minutes; when you don't drink within this time, another notification will be send
 let fastInterval = 10;
 // how often you want to get notified in fastInterval time steps
@@ -79,9 +79,10 @@ let nFastReminders = 0;
 let deleteThreshold = 10;
 
 // the unit you want to use, current: litres = L
-let unit = "L";
+let unit = "ml";
+let unitLarge="L";
 // your daily goal
-let goal = 2.5;
+let goal = 3.5;
 // you should not drink more than this, because it isn’t healthy anymore. Only displays a warning, but it can't stop you from drinking more
 let max = 3.75;
 
@@ -95,13 +96,9 @@ let keepCurrentNotif = true;
 // you can create arbitrary fractions with superscript digits \u2070, \u00b9, \u00b2, \u00b3, \u2074 - \u2079 and fraction slash \u2044 and subscript digits \u2080 - \u2089 e.g. 5/8 is \u2075\u2044\u2088
 // these choices will be sorted in ascending order of their value
 let presets = {
-  "\u215b": 1 / 8,
-  "\u00bc": 1 / 4,
-  "\u2153": 1 / 3,
-  "\u00bd": 1 / 2,
-  "\u2154": 2 / 3,
-  "\u00be": 3 / 4,
-  "1": 1,
+	"100": 1/10,
+  "200":1/5,
+	"250": 1/4	
 };
 
 // advanced options
@@ -113,7 +110,7 @@ let newDay = 4.00; // 4 am
 
 // Whether to use moment.js
 // Toggles only the displaying of times written in words like "3 hours ago"
-let useMoment = false;
+let useMoment = true;
 // path to moment.js when it is enabled
 let momentPath = "lib/moment.js";
 // if you don't have moment.js installed, see: https://github.com/schl3ck/scriptable-moment/blob/master/README.md
@@ -234,10 +231,11 @@ if (data) {
   data.last && data.last.date && (data.last.date = new Date(data.last.date));
 }
 
+/*
 await Notification.allPending()
   .filter((n) => n.threadIdentifier === scriptName && !n.nextTriggerDate)
   .forEach((n) => n.remove());
-
+*/
 async function scheduleNotifs(resetData = false) {
   log(lang.schedulingNotifications);
 
@@ -275,11 +273,12 @@ async function scheduleNotifs(resetData = false) {
   }
   while (d < endOfDay) {
     await createNotification(d);
-    for (let j = 1; j <= nFastReminders; j++) {
+    //removing fast reminders
+    /*for (let j = 1; j <= nFastReminders; j++) {
       let next = new Date(d);
       next.addMinutes(fastInterval * j);
       await createNotification(next);
-    }
+    }*/
     d.addMinutes(interval);
   }
   await createNotification(startOfDay);
@@ -729,71 +728,9 @@ function getLanguage() {
       enterAmount: "Please enter how much",
       ok: "OK",
       amountAndUnit: "%a %u",
-    },
-    de: {
-      nothingDrunken:
-        "Du hast heute noch nichts getrunken. Nimm den ersten Schluck!",
-      schedulingNotifications: "Erstelle Benachrichtigungen",
-      scheduledNotifications: "Benachrichtigungen sind geplant für:",
-      notificationBody:
-        "Vergiss nicht zu trinken oder hast du schon etwas getrunken? Öffne diese Benachrichtigung und wähle wie viel!",
-      progressToday: "Du hast heute schon %a %u getrunken!",
-      drunkenTooMuch:
-        "Pass auf, wieviel du heute noch trinkst, weil es ungesund sein kann, so viel zu trinken!",
-      goalReached:
-        "Du hast es geschafft! Du hast dein Ziel erreicht! Glückwunsch!",
-      drinkMore: "Dir fehlen nur mehr %a %u. Bleib dran!",
-      yesterdayDrunken: "Gestern: %a %u",
-      lastTime: "Das letzte mal hast du %a %u getrunken. Das war um %d",
-      nextNotification: "Die nächstes Benachrichtigung ist für %d geplant",
-      disableNotifications:
-        "Schalte alle Benachrichtigungen für heute und morgen früh aus",
-      scheduleNewNotifications: "Erstelle Benachrichtigungen",
-      customAmount: "Menge eingeben",
-      lastDay: "gestern",
-      nextDay: "morgen",
-      done: "Fertig",
-      undo: "Rückgängig",
-      saved: "Gespeichert!",
-      added: "%a %u hinzugefügt",
-      totalAfterAdd: "Gesamt: %a %u",
-      undoneAdd: "Hinzufügen von %a %u rückgängig machen",
-      enterAmount: "Bitte gib die Menge ein",
-      ok: "OK",
-      amountAndUnit: "%a %u",
-    },
-    nl: {
-      nothingDrunken:
-        "je hebt nog niet gedronken vandaag. Neem je eerste slokje!",
-      schedulingNotifications: "Scheduling Notifications",
-      scheduledNotifications: "Herinnering gepland om:",
-      notificationBody:
-        "Vergeet niet te drinken! Heb je al gedronken? Open dan deze melding en kies de hoeveelheid.",
-      progressToday: "Je hebt vandaag %a %u gedronken!",
-      drunkenTooMuch: "Let op! Drink niet te veel want dat is niet gezond!",
-      goalReached: "Woop woop! Je hebt je doel bereikt! Gefeliciteerd makker!",
-      drinkMore: "Nog maar %a %u te gaan. Blijf water drinken!",
-      yesterdayDrunken: "Gister: %a %u",
-      lastTime: "De laatste keer heb je %a %u gedronken om %d uur.",
-      nextNotification: "De volgende herinnering staat gepland om %d uur.",
-      disableNotifications:
-        "Schakel herinneringen voor vandaag en morgen ochtend uit.",
-      scheduleNewNotifications: "plan herinneringen...",
-      customAmount: "Aangepaste hoeveelheid...",
-      lastDay: "gister",
-      nextDay: "morgen",
-      done: "Klaar",
-      undo: "Maak ongedaan...",
-      saved: "Opgeslagen!",
-      added: "%a %u toegevoegd.",
-      totalAfterAdd: "Het totaal is nu %a %u.",
-      undoneAdd: "%a %u ongedaan gemaakt.",
-      enterAmount: "Hoeveel heb je gedronken?",
-      ok: "OK",
-      amountAndUnit: "%a %u",
-    },
+    }
   };
-  return lang[Device.language()] || lang.en;
+  return  lang.en;
 }
 
 /********** Changelog **********
@@ -807,7 +744,7 @@ Added support for logging with Siri
 Fixed printing "undefined" instead of "yesterday" in front of time stamps
 
 v1.0 - 2019-04-09
-Initial release1
+Initial release
 
 
 */
