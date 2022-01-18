@@ -807,7 +807,7 @@ Added support for logging with Siri
 Fixed printing "undefined" instead of "yesterday" in front of time stamps
 
 v1.0 - 2019-04-09
-Initial release
+Initial release1
 
 
 */
